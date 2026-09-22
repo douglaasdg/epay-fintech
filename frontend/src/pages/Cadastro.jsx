@@ -30,10 +30,20 @@ export default function Cadastro() {
     setLoading(true);
 
     try {
-      await cadastrar(formData);
+      await cadastrar({
+        ...formData,
+        email: formData.email.trim().toLowerCase(),
+        cpf: formData.cpf.trim(),
+        nome: formData.nome.trim(),
+        senha: formData.senha.trim(),
+      });
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Erro ao criar conta. Verifique os dados informados.');
+      if (!err.response) {
+        setError('Não foi possível conectar ao servidor. Verifique se o backend está ativo.');
+      } else {
+        setError(err.response?.data?.message || 'Erro ao criar conta. Verifique os dados informados.');
+      }
     } finally {
       setLoading(false);
     }

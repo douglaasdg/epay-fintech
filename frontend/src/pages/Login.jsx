@@ -19,10 +19,16 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await login(email, senha);
+      await login(email.trim(), senha.trim());
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'E-mail ou senha incorretos.');
+      if (!err.response) {
+        setError('Não foi possível conectar ao servidor. Verifique se o backend está ativo.');
+      } else if (err.response.status === 401) {
+        setError('E-mail ou senha incorretos.');
+      } else {
+        setError(err.response?.data?.message || 'Erro ao efetuar login. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }

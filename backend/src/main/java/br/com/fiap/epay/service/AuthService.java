@@ -39,19 +39,20 @@ public class AuthService {
 
     @Transactional
     public LoginResponseDto cadastrar(RegisterRequestDto dto) {
-        if (usuarioRepository.existsByEmail(dto.getEmail())) {
+        String emailNormalizado = dto.getEmail().trim().toLowerCase();
+        if (usuarioRepository.existsByEmailIgnoreCase(emailNormalizado)) {
             throw new BusinessException("Já existe um usuário cadastrado com este e-mail.");
         }
-        if (usuarioRepository.existsByCpf(dto.getCpf())) {
+        if (usuarioRepository.existsByCpf(dto.getCpf().trim())) {
             throw new BusinessException("Já existe um usuário cadastrado com este CPF.");
         }
 
         // 1. Cria o Usuário com senha criptografada em BCrypt
         Usuario usuario = new Usuario();
-        usuario.setNome(dto.getNome());
-        usuario.setEmail(dto.getEmail());
+        usuario.setNome(dto.getNome().trim());
+        usuario.setEmail(emailNormalizado);
         usuario.setSenhaHash(passwordEncoder.encode(dto.getSenha()));
-        usuario.setCpf(dto.getCpf());
+        usuario.setCpf(dto.getCpf().trim());
         usuario.setTelefone(dto.getTelefone());
         usuario = usuarioRepository.save(usuario);
 
@@ -97,10 +98,13 @@ public class AuthService {
     }
 
     public LoginResponseDto login(LoginRequestDto dto) {
-        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
+        String email = dto.getEmail() != null ? dto.getEmail().trim().toLowerCase() : "";
+        String senha = dto.getSenha() != null ? dto.getSenha().trim() : "";
+
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas."));
 
-        if (!passwordEncoder.matches(dto.getSenha(), usuario.getSenhaHash())) {
+        if (!passwordEncoder.matches(senha, usuario.getSenhaHash())) {
             throw new BadCredentialsException("Credenciais inválidas.");
         }
 

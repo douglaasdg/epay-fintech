@@ -38,7 +38,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             String email = tokenService.validarToken(token);
 
             if (email != null) {
-                Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
+                Optional<Usuario> usuarioOpt = usuarioRepository.findByEmailIgnoreCase(email);
 
                 if (usuarioOpt.isPresent()) {
                     Usuario usuario = usuarioOpt.get();
