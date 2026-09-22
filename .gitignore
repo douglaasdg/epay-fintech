@@ -1,0 +1,38 @@
+# =====================================================================
+# GITIGNORE PARA PROJETO FULL-STACK E-PAY FINTECH
+# =====================================================================
+
+# 1. Backend (Java / Spring Boot / Maven)
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/*.class
+backend/*.log
+backend/src/main/resources/application-local.properties
+
+# 2. Frontend (Node / React / Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# 3. IDEs e Ferramentas de Desenvolvimento
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
